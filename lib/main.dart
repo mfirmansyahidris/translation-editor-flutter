@@ -1,3 +1,4 @@
+import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -23,6 +24,16 @@ Future<void> main() async {
     ),
   );
 
+  doWhenWindowReady(() {
+    final win = appWindow;
+    const initialSize = Size(600, 450);
+    win.minSize = initialSize;
+    win.size = initialSize;
+    win.alignment = Alignment.center;
+    win.title = Strings.appName;
+    win.show();
+  });
+
 }
 
 class App extends StatefulWidget {
@@ -40,7 +51,9 @@ class _AppState extends State<App> {
     super.initState();
     _themeBloc = context.read();
     Di.localStorage.getTheme().then((brigtness){
-      _themeBloc.set(context, brightness: brigtness);
+      if(brigtness == null){
+        _themeBloc.set(context, brightness: Brightness.light);
+      }
     });
   }
 
@@ -49,6 +62,7 @@ class _AppState extends State<App> {
     return BlocBuilder<ThemeBloc, ThemeData>(
       builder: (context, theme) {
         return MaterialApp(
+          debugShowCheckedModeBanner: false,
           title: Strings.appName,
           localizationsDelegates: context.localizationDelegates,
           supportedLocales: context.supportedLocales,

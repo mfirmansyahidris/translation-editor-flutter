@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:msq_translation_editor/msq_translation_editor.dart';
 
+export 'dimens.dart';
 export 'locales.dart';
 export 'strings.dart';
 export 'themes.dart';
