@@ -1,0 +1,1 @@
+export 'di/injector.dart';
