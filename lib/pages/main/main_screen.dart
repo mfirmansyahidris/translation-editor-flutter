@@ -1,12 +1,7 @@
 import 'package:bitsdojo_window/bitsdojo_window.dart';
-import 'package:easy_localization/easy_localization.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/painting.dart';
-import 'package:flutter/widgets.dart';
-import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:msq_translation_editor/msq_translation_editor.dart';
-import 'package:msq_translation_editor/widgets/windowed_scaffold.dart';
+import 'package:msq_translation_editor/resources/localization/languages.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -17,7 +12,21 @@ class MainScreen extends StatefulWidget {
 
 class _MainScreenState extends State<MainScreen> {
 
+  final _languagesSource = Languages();
+
   final ScrollController _horizontal = ScrollController(), _vertical = ScrollController();
+
+  List<String> get _languages => _languagesSource.keys.keys.toList();
+
+  List<String> get _keys {
+    final keys = <String>{};
+    for (var language in _languages) { 
+      keys.addAll(_languagesSource.keys[language]?.keys.toList() ?? []);
+    }
+    final listKey = keys.toList();
+    listKey.sort((a, b) => a.compareTo(b));
+    return listKey;
+  }
   
   @override
   void initState() {
@@ -61,22 +70,16 @@ class _MainScreenState extends State<MainScreen> {
                       padding: const EdgeInsets.all(Dimens.spaceDefault),
                       child: DataTable(
                         columns: [
-                          DataColumn(label: const Text("#"),),
-                          DataColumn(label: const Text("key")),
-                          DataColumn(label: const Text("en-US")),
-                          DataColumn(label: const Text("ko-KR")),
-                          DataColumn(label: const Text("ja-JP")),
-                          DataColumn(label: const Text("zn-CH")),
+                          const DataColumn(label: Text("#"),),
+                          const DataColumn(label: Text("key")),
+                          ... _languages.map((e) => DataColumn(label: Text(e)))
                         ],
                         rows: List<DataRow>.generate(
-                          10, (index) => DataRow(
+                          _keys.length, (index) => DataRow(
                             cells: [
                               DataCell(Text((index + 1).toString())),
-                              DataCell(Text("hello")),
-                              DataCell(Text("Nulla viverra pretium quam, a feugiat orci"), ),
-                              DataCell(Text("Nulla pulvinar rutrum pulvinar")),
-                              DataCell(Text("Aliquam erat volutpat")),
-                              DataCell(Text("ut pellentesque mi porttitor")),
+                              DataCell(Text(_keys[index])),
+                              ... _languages.map((e) => DataCell(Text(_languagesSource.keys[e]?[_keys[index]] ?? ""), )),
                             ]
                           )
                         ),
@@ -89,18 +92,6 @@ class _MainScreenState extends State<MainScreen> {
           ),
           const FooterSection()
         ],
-      ),
-    );
-  }
-
-  Widget _textHeader(String text){
-    return Padding(
-      padding: const EdgeInsets.all(Dimens.spaceXXS),
-      child: Text(
-        text,
-        style: TextStyles.titleSmall?.copyWith(
-          fontWeight: FontWeight.bold
-        ),
       ),
     );
   }
