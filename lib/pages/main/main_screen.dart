@@ -1,4 +1,5 @@
 import 'package:bitsdojo_window/bitsdojo_window.dart';
+import 'package:data_table_2/data_table_2.dart';
 import 'package:flutter/material.dart';
 import 'package:msq_translation_editor/msq_translation_editor.dart';
 import 'package:msq_translation_editor/resources/localization/languages.dart';
@@ -14,7 +15,6 @@ class _MainScreenState extends State<MainScreen> {
 
   final _languagesSource = Languages();
 
-  final ScrollController _horizontal = ScrollController(), _vertical = ScrollController();
 
   List<String> get _languages => _languagesSource.keys.keys.toList();
 
@@ -56,38 +56,38 @@ class _MainScreenState extends State<MainScreen> {
           const HeaderSection(),
           const Divider(),
           Expanded(
-            child: Scrollbar(
-              controller: _vertical,
-              child: Scrollbar(
-                controller: _horizontal,
-                notificationPredicate: (notif) => notif.depth == 1,
-                child: SingleChildScrollView(
-                  controller: _vertical,
-                  child: SingleChildScrollView(
-                    controller: _horizontal,
-                    scrollDirection: Axis.horizontal,
-                    child: Padding(
-                      padding: const EdgeInsets.all(Dimens.spaceDefault),
-                      child: DataTable(
-                        columns: [
-                          const DataColumn(label: Text("#"),),
-                          const DataColumn(label: Text("key")),
-                          ... _languages.map((e) => DataColumn(label: Text(e)))
-                        ],
-                        rows: List<DataRow>.generate(
-                          _keys.length, (index) => DataRow(
-                            cells: [
-                              DataCell(Text((index + 1).toString())),
-                              DataCell(Text(_keys[index])),
-                              ... _languages.map((e) => DataCell(Text(_languagesSource.keys[e]?[_keys[index]] ?? ""), )),
-                            ]
-                          )
-                        ),
-                      )
-                    ),
-                  ),
-                ),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: Dimens.spaceDefault
               ),
+              child: DataTable2(
+                columnSpacing: 12,
+                horizontalMargin: 12,
+                minWidth: 50 + 200 + (_languages.length * 500),
+                columns: [
+                  const DataColumn2(
+                    label: Text("#"),
+                    fixedWidth: 50,
+                  ),
+                  const DataColumn2(
+                    label: Text("key"),
+                    fixedWidth: 200
+                  ),
+                  ... _languages.map((e) => DataColumn2(
+                    label: Text(e),
+                    fixedWidth: 300
+                  ))
+                ],
+                rows: List<DataRow>.generate(
+                  _keys.length, (index) => DataRow(
+                    cells: [
+                      DataCell(Text((index + 1).toString())),
+                      DataCell(Text(_keys[index])),
+                      ... _languages.map((e) => DataCell(Text(_languagesSource.keys[e]?[_keys[index]] ?? ""), )),
+                    ]
+                  )
+                ),
+              )
             ),
           ),
           const FooterSection()
