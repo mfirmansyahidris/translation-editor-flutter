@@ -31,7 +31,8 @@ class WindowedScaffold extends StatelessWidget {
     this.restorationId,
     this.windowActionButtons,
     this.windowTitle,
-    this.toolbarColor
+    this.toolbarColor,
+    this.toolbarTextColor
   });
 
   final bool extendBody;
@@ -60,50 +61,86 @@ class WindowedScaffold extends StatelessWidget {
   final List<WindowActionButton>? windowActionButtons;
   final String? windowTitle;
   final Color? toolbarColor;
+  final Color? toolbarTextColor;
+
+  Widget _body(){
+    if(extendBodyBehindAppBar){
+      return Stack(
+        children: [
+          if(body != null) body!,
+          Positioned(
+            top: 0,
+            left: 0,
+            right: 0,
+            child: WindowTitleBarBox(
+              child: Container(
+                color: toolbarColor,
+                child: Stack(
+                  children: [
+                    if(windowTitle != null) Center(
+                      child: Text(
+                        windowTitle!,
+                        style: TextStyles.bodySmall?.copyWith(
+                          color: toolbarTextColor
+                        ),
+                      ),
+                    ),
+                    Row(
+                      children: [
+                        Expanded(child: MoveWindow()),
+                        WindowButtons(
+                          buttons: windowActionButtons,
+                        )
+                      ],
+                    ),
+                  ],
+                ),
+              )
+            ),
+          ),
+        ],
+      );
+    }else{
+      return Column(
+        children: [
+          WindowTitleBarBox(
+            child: Container(
+              color: toolbarColor,
+              child: Stack(
+                children: [
+                  if(windowTitle != null) Center(
+                    child: Text(
+                      windowTitle!,
+                      style: TextStyles.bodySmall?.copyWith(
+                        color: toolbarTextColor
+                      ),
+                    ),
+                  ),
+                  Row(
+                    children: [
+                      Expanded(child: MoveWindow()),
+                      WindowButtons(
+                        buttons: windowActionButtons,
+                      )
+                    ],
+                  ),
+                ],
+              ),
+            )
+          ),
+          if(body != null) Expanded(
+            child: body!,
+          ),
+        ],
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       key: key,
-      body: SizedBox(
-        height: Dimens.screen.height,
-        width: Dimens.screen.width,
-        child: Stack(
-          children: [
-            if(body != null) body!,
-            Positioned(
-              top: 0,
-              left: 0,
-              right: 0,
-              child: WindowTitleBarBox(
-                child: Container(
-                  color: toolbarColor,
-                  child: Stack(
-                    children: [
-                      if(windowTitle != null) Center(
-                        child: Text(
-                          windowTitle!,
-                          style: TextStyles.bodySmall?.copyWith(
-                            color: Palette.onPrimaryContainer
-                          ),
-                        ),
-                      ),
-                      Row(
-                        children: [
-                          Expanded(child: MoveWindow()),
-                          WindowButtons(
-                            buttons: windowActionButtons,
-                          )
-                        ],
-                      ),
-                    ],
-                  ),
-                )
-              ),
-            ),
-          ],
-        ),
-      ),
+      body: _body(),
       floatingActionButton: floatingActionButton,
       floatingActionButtonLocation: floatingActionButtonLocation,
       floatingActionButtonAnimator: floatingActionButtonAnimator,
