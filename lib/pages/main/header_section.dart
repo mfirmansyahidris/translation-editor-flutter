@@ -1,10 +1,15 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:msq_translation_editor/msq_translation_editor.dart';
 
 class HeaderSection extends StatelessWidget {
-  const HeaderSection({super.key});
+  final Function(String)? onSearch;
+
+  HeaderSection({super.key, this.onSearch});
+
+  final Debounce _debounce = Debounce(delay: 300);
+
+  final TextEditingController _searchController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -36,14 +41,36 @@ class HeaderSection extends StatelessWidget {
                   ),
                   SpacerH.XS,
                   Expanded(
-                    child: FormBuilderTextField(
-                      name: Strings.search,
+                    child: TextFormField(
+                      controller: _searchController,
                       style: TextStyles.bodyMedium,
+                      maxLines: 1,
+                      onChanged: (value){
+                        if((value).isEmpty) return;
+                        _debounce.execute(() { 
+                          onSearch?.call(value);
+                        });
+                      },
                       decoration: InputDecoration.collapsed(
                         hintText: Strings.search.tr(),
                       ),
                     ),
                   ),
+                  TextButton(
+                    onPressed: (){
+                      _searchController.clear();
+                      onSearch?.call("");
+                    }, 
+                    style: TextButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: Dimens.spaceDefault,
+                        vertical: Dimens.spaceXS
+                      ),
+                      minimumSize: Size.zero,
+                      tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                    ),
+                    child: const Text(Strings.clear).tr()
+                  )
                 ],
               ),
             ),

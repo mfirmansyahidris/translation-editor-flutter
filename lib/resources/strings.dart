@@ -6,4 +6,5 @@ class Strings {
   static const String setup = 'setup';
   static const String apply = 'apply';
   static const String closeConfirmation = 'close_confirmation';
+  static const String clear = 'clear';
 }
