@@ -5,5 +5,12 @@
     "setup": "Setup",
     "apply": "Apply",
     "close_confirmation": "Your changes was not saved, are you sure want to close the editor?",
-    "clear": "Clear"
+    "clear": "Clear",
+    "key": "Key",
+    "field_is_required": "{} is required",
+    "cancel": "Cancel",
+    "close": "Close",
+    "delete": "Delete",
+    "view": "View",
+    "auto_generate": "Auto Generate"
 }

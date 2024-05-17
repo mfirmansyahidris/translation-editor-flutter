@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:material_table_view/default_animated_switcher_transition_builder.dart';
 import 'package:material_table_view/material_table_view.dart';
@@ -310,46 +311,84 @@ class MaterialDataTableState extends State<MaterialDataTable>
                   .withAlpha(selected ? 0xFF : 0),
               child: Material(
                 type: MaterialType.transparency,
-                child: InkWell(
-                  onTap: (){
+                child: GestureDetector(
+                  onSecondaryTapUp: (detail){
                     setState(() {
                       selection = row;
                     });
-                    showDialog(
-                      context: context, 
-                      builder: (context) => DetailDialog()
-                    );
+                    _showContextMenu(context, detail.globalPosition);
                   },
-                  child: contentBuilder(
-                    context,
-                    (context, column){
-                      String text = "";
-                      if(column == 0){
-                        text = (row + 1).toString();
-                      }else if(column == 1){
-                        text = _keys[row];
-                      }else{
-                        text = _languagesSource.keys[_languages[column - 2]]?[_keys[row]] ?? "";
-                      }
-                      return Padding(
-                        padding: const EdgeInsets.only(left: 8.0),
-                        child: Align(
-                          alignment: Alignment.centerLeft,
-                          child: Text(
-                            text,
-                            style: textStyle,
-                            overflow: TextOverflow.fade,
-                            maxLines: 1,
-                            softWrap: false,
-                          ),
-                        ),
+                  child: InkWell(
+                    onTap: (){
+                      setState(() {
+                        selection = row;
+                      });
+                      showDialog(
+                        context: context, 
+                        builder: (context) => DetailDialog()
                       );
                     },
+                    child: contentBuilder(
+                      context,
+                      (context, column){
+                        String text = "";
+                        if(column == 0){
+                          text = (row + 1).toString();
+                        }else if(column == 1){
+                          text = _keys[row];
+                        }else{
+                          text = _languagesSource.keys[_languages[column - 2]]?[_keys[row]] ?? "";
+                        }
+                        return Padding(
+                          padding: const EdgeInsets.only(left: 8.0),
+                          child: Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              text,
+                              style: textStyle,
+                              overflow: TextOverflow.fade,
+                              maxLines: 1,
+                              softWrap: false,
+                            ),
+                          ),
+                        );
+                      },
+                    ),
                   ),
                 ),
               ),
             ),
           );
+  }
+
+  void _showContextMenu(BuildContext context, Offset position) {
+    final RenderBox overlay = Overlay.of(context).context.findRenderObject() as RenderBox;
+    showMenu(
+      context: context,
+      position: RelativeRect.fromRect(
+        Rect.fromPoints(
+          overlay.localToGlobal(position),
+          overlay.localToGlobal(position),
+        ),
+        Offset.zero & overlay.size,
+      ),
+      items: <PopupMenuEntry>[
+        PopupMenuItem(
+          onTap: (){
+            
+          },
+          child: const Text(Strings.view).tr(),
+        ),
+        PopupMenuItem(
+          child: Text(
+            Strings.delete,
+            style: TextStyle(
+              color: Palette.error
+            ),
+          ).tr(),
+        ),
+      ],
+    );
   }
 
   Widget _placeholderBuilder(
