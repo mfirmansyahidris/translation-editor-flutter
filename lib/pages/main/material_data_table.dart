@@ -56,8 +56,7 @@ class _MyTableColumn extends TableColumn {
 
 
 class MaterialDataTable extends StatefulWidget {
-  final Map<String, Map<String, String>> languages;
-  const MaterialDataTable({super.key, required this.languages});
+  const MaterialDataTable({super.key});
 
   @override
   State<MaterialDataTable> createState() => MaterialDataTableState();
@@ -72,7 +71,7 @@ class MaterialDataTableState extends State<MaterialDataTable>
   int placeholderOffsetIndex = 0;
 
 
-  List<String> get _languages => widget.languages.keys.toList();
+  List<String> get _languages => Di.translation.languages.keys.toList();
 
   List<String> _keys = [];
 
@@ -113,7 +112,7 @@ class MaterialDataTableState extends State<MaterialDataTable>
   void setKeys({String? search}){
     final keys = <String>{};
     for (var language in _languages) { 
-      keys.addAll(widget.languages[language]?.keys.toList() ?? []);
+      keys.addAll(Di.translation.languages[language]?.keys.toList() ?? []);
     }
     final listKey = keys.toList();
     listKey.sort((a, b) => a.compareTo(b));
@@ -326,7 +325,7 @@ class MaterialDataTableState extends State<MaterialDataTable>
                       });
                       final Map<String, String> translation = {};
                       for(final lang in _languages){
-                        translation[lang] = widget.languages[lang]?[_keys[row]] ?? "";
+                        translation[lang] = Di.translation.languages[lang]?[_keys[row]] ?? "";
                       }
                       showDialog(
                         context: context, 
@@ -346,7 +345,7 @@ class MaterialDataTableState extends State<MaterialDataTable>
                         }else if(column == 1){
                           text = _keys[row];
                         }else{
-                          text = widget.languages[_languages[column - 2]]?[_keys[row]] ?? "";
+                          text = Di.translation.languages[_languages[column - 2]]?[_keys[row]] ?? "";
                         }
                         return Padding(
                           padding: const EdgeInsets.only(left: 8.0),

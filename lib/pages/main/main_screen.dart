@@ -13,15 +13,13 @@ class _MainScreenState extends State<MainScreen> {
 
   final _keySearch = GlobalKey<MaterialDataTableState>();
 
-  Map<String, Map<String, String>> _languages = {};
-
   @override
   void initState() {
     super.initState();
-    final languageFiles = FileManager.openLanguageFile(widget.path);
-    FileManager.toLanguageMap(languageFiles).then((value){
+    final languageFiles = Di.translation.openLanguageFile(widget.path);
+    Di.translation.setLanguages(languageFiles).then((value){
       setState(() {
-        _languages = value;
+        
       });
     });
   }
@@ -40,7 +38,7 @@ class _MainScreenState extends State<MainScreen> {
             },
             onAdd: (){
               final Map<String, String> translation = {};
-              for(final lang in _languages.keys.toList()){
+              for(final lang in Di.translation.languages.keys.toList()){
                 translation[lang] = "";
               }
               showDialog(
@@ -60,10 +58,9 @@ class _MainScreenState extends State<MainScreen> {
                 horizontal: Dimens.spaceDefault
               ),
               child: Visibility(
-                visible: _languages.isNotEmpty,
+                visible: Di.translation.languages.isNotEmpty,
                 child: MaterialDataTable(
                   key: _keySearch,
-                  languages: _languages,
                 ),
               )
             ),

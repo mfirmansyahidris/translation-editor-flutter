@@ -30,7 +30,7 @@ class _InitializationScreenState extends State<InitializationScreen> {
   void _open(){
     FilePicker.platform.getDirectoryPath().then((path){
       if(path != null){
-        final files = FileManager.openLanguageFile(path);
+        final files = Di.translation.openLanguageFile(path);
         if(files.isEmpty){
           showDialog(
             context: context, 

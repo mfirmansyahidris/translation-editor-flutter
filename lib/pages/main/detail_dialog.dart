@@ -48,6 +48,22 @@ class _DetailDialogState extends State<DetailDialog> {
                   ),
                 )).toList(),
                 SpacerV.M,
+                Container(
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    color: Palette.errorContainer,
+                    border: Border.all(color: Palette.error),
+                    borderRadius: BorderRadius.circular(Dimens.borderRadiusS)
+                  ),
+                  padding: const EdgeInsets.all(Dimens.spaceXS),
+                  child: Text(
+                    "Please fill at least one language to start to generate the translation",
+                    style: TextStyle(
+                      color: Palette.onErrorContainer
+                    ),
+                  ),
+                ),
+                SpacerV.M,
                 const Divider(),
                 SpacerV.M,
                 Row(
