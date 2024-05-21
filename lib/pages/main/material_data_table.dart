@@ -324,9 +324,17 @@ class MaterialDataTableState extends State<MaterialDataTable>
                       setState(() {
                         selection = row;
                       });
+                      final Map<String, String> translation = {};
+                      for(final lang in _languages){
+                        translation[lang] = widget.languages[lang]?[_keys[row]] ?? "";
+                      }
                       showDialog(
                         context: context, 
-                        builder: (context) => DetailDialog()
+                        builder: (context) => DetailDialog(
+                          keyword: _keys[row],
+                          isEdit: true,
+                          translation: translation,
+                        )
                       );
                     },
                     child: contentBuilder(

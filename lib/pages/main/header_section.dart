@@ -4,8 +4,9 @@ import 'package:msq_translation_editor/msq_translation_editor.dart';
 
 class HeaderSection extends StatelessWidget {
   final Function(String)? onSearch;
+  final VoidCallback? onAdd;
 
-  HeaderSection({super.key, this.onSearch});
+  HeaderSection({super.key, this.onSearch, this.onAdd});
 
   final Debounce _debounce = Debounce(delay: 300);
 
@@ -18,7 +19,7 @@ class HeaderSection extends StatelessWidget {
       child: Row(
         children: [
           ElevatedButton.icon(
-            onPressed: () {},
+            onPressed: onAdd,
             icon: const Icon(Icons.add),
             label: const Text(Strings.add).tr(),
           ),

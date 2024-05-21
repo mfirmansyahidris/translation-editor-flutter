@@ -38,6 +38,20 @@ class _MainScreenState extends State<MainScreen> {
             onSearch: (value){
               _keySearch.currentState?.setKeys(search: value);
             },
+            onAdd: (){
+              final Map<String, String> translation = {};
+              for(final lang in _languages.keys.toList()){
+                translation[lang] = "";
+              }
+              showDialog(
+                context: context, 
+                builder: (context) => DetailDialog(
+                  keyword: "",
+                  isEdit: true,
+                  translation: translation,
+                )
+              );
+            },
           ),
           const Divider(),
           Expanded(

@@ -2,21 +2,18 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:msq_translation_editor/msq_translation_editor.dart';
-import 'package:msq_translation_editor/resources/localization/languages.dart';
 
 class DetailDialog extends StatefulWidget {
-  const DetailDialog({super.key});
+  final bool isEdit;
+  final String? keyword;
+  final Map<String, String>? translation; 
+  const DetailDialog({super.key, this.keyword, this.translation, this.isEdit = false});
 
   @override
   State<DetailDialog> createState() => _DetailDialogState();
 }
 
 class _DetailDialogState extends State<DetailDialog> {
-  
-  final _languagesSource = Languages();
-
-  List<String> get _languages => _languagesSource.keys.keys.toList();
-
 
   @override
   Widget build(BuildContext context) {
@@ -31,15 +28,19 @@ class _DetailDialogState extends State<DetailDialog> {
                 SpacerV.M,
                 FormBuilderTextField(
                   name: Strings.key,
+                  readOnly: widget.isEdit,
+                  initialValue: widget.keyword,
                   decoration: InputDecoration(
                     border: const OutlineInputBorder(),
                     label: Text(Strings.key.tr()),
                   ),
                 ),
-                ... _languages.map((e) => Padding(
+                if((widget.translation ?? {}).isNotEmpty)... widget.translation!.keys.map((e) => Padding(
                   padding: const EdgeInsets.only(top: Dimens.spaceDefault),
                   child: FormBuilderTextField(
                     name: e,
+                    initialValue: widget.translation![e],
+                    maxLines: 3,
                     decoration: InputDecoration(
                       border: const OutlineInputBorder(),
                       label: Text(e),
