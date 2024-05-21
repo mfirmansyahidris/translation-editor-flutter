@@ -8,7 +8,6 @@ import 'package:material_table_view/shimmer_placeholder_shade.dart';
 import 'package:material_table_view/table_column_control_handles_popup_route.dart';
 import 'package:material_table_view/table_view_typedefs.dart';
 import 'package:msq_translation_editor/msq_translation_editor.dart';
-import 'package:msq_translation_editor/resources/localization/languages.dart';
 
 class _MyTableColumn extends TableColumn {
   _MyTableColumn({
@@ -57,7 +56,8 @@ class _MyTableColumn extends TableColumn {
 
 
 class MaterialDataTable extends StatefulWidget {
-  const MaterialDataTable({super.key});
+  final Map<String, Map<String, String>> languages;
+  const MaterialDataTable({super.key, required this.languages});
 
   @override
   State<MaterialDataTable> createState() => MaterialDataTableState();
@@ -71,10 +71,8 @@ class MaterialDataTableState extends State<MaterialDataTable>
   int? selection;
   int placeholderOffsetIndex = 0;
 
-  final _languagesSource = Languages();
 
-
-  List<String> get _languages => _languagesSource.keys.keys.toList();
+  List<String> get _languages => widget.languages.keys.toList();
 
   List<String> _keys = [];
 
@@ -115,7 +113,7 @@ class MaterialDataTableState extends State<MaterialDataTable>
   void setKeys({String? search}){
     final keys = <String>{};
     for (var language in _languages) { 
-      keys.addAll(_languagesSource.keys[language]?.keys.toList() ?? []);
+      keys.addAll(widget.languages[language]?.keys.toList() ?? []);
     }
     final listKey = keys.toList();
     listKey.sort((a, b) => a.compareTo(b));
@@ -125,6 +123,9 @@ class MaterialDataTableState extends State<MaterialDataTable>
     }else{
       _keys = listKey;
     }
+    setState(() {
+      
+    });
   }
 
   @override
@@ -337,7 +338,7 @@ class MaterialDataTableState extends State<MaterialDataTable>
                         }else if(column == 1){
                           text = _keys[row];
                         }else{
-                          text = _languagesSource.keys[_languages[column - 2]]?[_keys[row]] ?? "";
+                          text = widget.languages[_languages[column - 2]]?[_keys[row]] ?? "";
                         }
                         return Padding(
                           padding: const EdgeInsets.only(left: 8.0),

@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:msq_translation_editor/msq_translation_editor.dart';
 import 'package:msq_translation_editor/resources/localization/languages.dart';
-import 'package:msq_translation_editor/resources/resources.dart';
 
 class DetailDialog extends StatefulWidget {
   const DetailDialog({super.key});

@@ -12,5 +12,14 @@
     "close": "Close",
     "delete": "Delete",
     "view": "View",
-    "auto_generate": "Auto Generate"
+    "auto_generate": "Auto Generate",
+    "recent": "Recent",
+    "new": "New",
+    "open": "Open",
+    "directory": "Directory",
+    "languages": "Languages",
+    "create": "Create",
+    "cannot_find_language_files": "Cannot Find The Language Files",
+    "please_select_directory_of_language_files": "Please select a directory that have a language files",
+    "ok": "Ok"
 }

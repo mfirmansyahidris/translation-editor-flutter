@@ -16,4 +16,13 @@ class Strings {
   static const String delete = 'delete';
   static const String view = 'view';
   static const String autoGenerate = "auto_generate";
+  static const String recent = 'recent';
+  static const String new1 = 'new';
+  static const String open = 'Open';
+  static const String directory = "directory";
+  static const String languages = "languages";
+  static const String create = "create";
+  static const String cannotFindLanguageFile = "cannot_find_language_files";
+  static const String pleaseSelectLanguageDirectory = "please_select_directory_of_language_files";
+  static const String ok = "ok";
 }

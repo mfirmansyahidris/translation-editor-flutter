@@ -1,9 +1,9 @@
-import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/material.dart';
 import 'package:msq_translation_editor/msq_translation_editor.dart';
 
 class MainScreen extends StatefulWidget {
-  const MainScreen({super.key});
+  final String path;
+  const MainScreen({super.key, required this.path});
 
   @override
   State<MainScreen> createState() => _MainScreenState();
@@ -13,19 +13,15 @@ class _MainScreenState extends State<MainScreen> {
 
   final _keySearch = GlobalKey<MaterialDataTableState>();
 
+  Map<String, Map<String, String>> _languages = {};
+
   @override
   void initState() {
     super.initState();
-
-    doWhenWindowReady(() {
-      final win = appWindow;
-      win.minSize = const Size(600, 450);
-      win.size = const Size(980, 640);
-      win.alignment = Alignment.center;
-      win.title = Strings.appName;
-      win.show();
+    final languageFiles = FileManager.openLanguageFile(widget.path);
+    FileManager.toLanguageMap(languageFiles).then((value){
       setState(() {
-        
+        _languages = value;
       });
     });
   }
@@ -49,7 +45,13 @@ class _MainScreenState extends State<MainScreen> {
               padding: const EdgeInsets.symmetric(
                 horizontal: Dimens.spaceDefault
               ),
-              child: MaterialDataTable(key: _keySearch,)
+              child: Visibility(
+                visible: _languages.isNotEmpty,
+                child: MaterialDataTable(
+                  key: _keySearch,
+                  languages: _languages,
+                ),
+              )
             ),
           ),
           const FooterSection()

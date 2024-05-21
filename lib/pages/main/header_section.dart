@@ -46,7 +46,6 @@ class HeaderSection extends StatelessWidget {
                       style: TextStyles.bodyMedium,
                       maxLines: 1,
                       onChanged: (value){
-                        if((value).isEmpty) return;
                         _debounce.execute(() { 
                           onSearch?.call(value);
                         });
