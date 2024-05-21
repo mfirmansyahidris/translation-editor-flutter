@@ -3,10 +3,8 @@ import 'dart:io';
 
 import 'package:msq_translation_editor/msq_translation_editor.dart';
 
-class Translation{
-  Map<String, Map<String, String>> languages = {};
-
-  List<File> openLanguageFile(String directoryPath){
+class FileManager{
+  static List<File> openLanguageFile(String directoryPath){
     final dir = Directory(directoryPath);
     final files = dir.listSync();
     List<File> result = [];
@@ -22,13 +20,14 @@ class Translation{
     return result;
   }
 
-  String _getFileName(File file){
+  static String _getFileName(File file){
     String pathSeparator = "/";
     if(Platform.isWindows) pathSeparator = "\\";
     return file.path.split(pathSeparator).last.split(".").first;
   }
+  Map<String, Map<String, String>> languages = {};
 
-  Future<void> setLanguages(List<File> files) async {
+  static Future<Map<String, Map<String, String>>> getLanguages(List<File> files) async {
     final Map<String, Map<String, String>> lang = {};
     for(final file in files){
       final fileName = _getFileName(file).split(".").first;
@@ -38,6 +37,6 @@ class Translation{
         lang[fileName] = jsonData.map((key, value) => MapEntry(key, value.toString()));
       }
     }
-    languages = lang;
+    return lang;
   }
 }

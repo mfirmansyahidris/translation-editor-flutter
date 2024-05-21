@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:msq_translation_editor/msq_translation_editor.dart';
 
 class MainScreen extends StatefulWidget {
@@ -14,14 +15,17 @@ class _MainScreenState extends State<MainScreen> {
   final _keySearch = GlobalKey<MaterialDataTableState>();
   String searchKey = "";
 
+  late TranslationBloc _translationBloc;
+
   @override
   void initState() {
     super.initState();
-    final languageFiles = Di.translation.openLanguageFile(widget.path);
-    Di.translation.setLanguages(languageFiles).then((value){
-      setState(() {
-        
-      });
+
+    _translationBloc = context.read();
+
+    final languageFiles = FileManager.openLanguageFile(widget.path);
+    FileManager.getLanguages(languageFiles).then((value){
+      _translationBloc.init(value);
     });
   }
 
@@ -31,46 +35,51 @@ class _MainScreenState extends State<MainScreen> {
       toolbarColor: Palette.primary,
       toolbarTextColor: Palette.onPrimary,
       windowTitle: Strings.appName,
-      body: Column(
-        children: [
-          HeaderSection(
-            onSearch: (value){
-              searchKey = value;
-              _keySearch.currentState?.setKeys(search: searchKey);
-            },
-            onAdd: () async {
-              final Map<String, String> translation = {};
-              for(final lang in Di.translation.languages.keys.toList()){
-                translation[lang] = "";
-              }
-              final res = await  showDialog(
-                context: context, 
-                builder: (context) => DetailDialog(
-                  keyword: "",
-                  translation: translation,
-                )
-              );
-              if(res != null && res is bool){
-                _keySearch.currentState?.setKeys(search: searchKey);
-              }
-            },
-          ),
-          const Divider(),
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: Dimens.spaceDefault
+      body: BlocBuilder<TranslationBloc, Map<String, Map<String, String>>>(
+        builder: (context, state) {
+          return Column(
+            children: [
+              HeaderSection(
+                onSearch: (value){
+                  searchKey = value;
+                  _keySearch.currentState?.setKeys(search: searchKey);
+                },
+                onAdd: () async {
+                  final Map<String, String> translation = {};
+                  for(final lang in state.keys.toList()){
+                    translation[lang] = "";
+                  }
+                  final res = await  showDialog(
+                    context: context, 
+                    builder: (context) => DetailDialog(
+                      keyword: "",
+                      translation: translation,
+                    )
+                  );
+                  if(res != null && res is bool){
+                    _keySearch.currentState?.setKeys(search: searchKey);
+                  }
+                },
               ),
-              child: Visibility(
-                visible: Di.translation.languages.isNotEmpty,
-                child: MaterialDataTable(
-                  key: _keySearch,
+              const Divider(),
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: Dimens.spaceDefault
+                  ),
+                  child: Visibility(
+                    visible: state.isNotEmpty,
+                    child: MaterialDataTable(
+                      key: _keySearch,
+                      languages: state,
+                    ),
+                  )
                 ),
-              )
-            ),
-          ),
-          const FooterSection()
-        ],
+              ),
+              const FooterSection()
+            ],
+          );
+        }
       ),
     );
   }

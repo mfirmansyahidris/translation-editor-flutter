@@ -1,6 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:msq_translation_editor/msq_translation_editor.dart';
@@ -22,6 +22,9 @@ class _DetailDialogState extends State<DetailDialog> {
   bool _translatingError = false;
 
   final _formkey = GlobalKey<FormBuilderState>();
+
+  late TranslationBloc _translationBloc;
+
   
 
   Future<void> _translate() async {
@@ -96,15 +99,22 @@ class _DetailDialogState extends State<DetailDialog> {
       final values = _formkey.currentState?.value;
 
       final keywords = values?[Strings.key];
+      final Map<String, Map<String, String>> result = {};
       for(final String key in (values?.keys ?? [])){
         if(key == Strings.key) continue;
-        Di.translation.languages[key]?.addAll({
-          keywords: values?[key]
-        });
+        result[key] = { keywords: values?[key] };
       }
+
+      _translationBloc.addAll(result);
 
       AppNavigator.pop(true);
     }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _translationBloc = context.read();
   }
 
   @override

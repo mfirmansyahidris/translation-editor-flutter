@@ -4,7 +4,8 @@ import 'package:msq_translation_editor/msq_translation_editor.dart';
 class GlobalProvider extends MultiBlocProvider{
   GlobalProvider({super.key, required super.child}) : super(
     providers: [
-      BlocProvider(create: (context) => ThemeBloc())
+      BlocProvider(create: (context) => ThemeBloc()),
+      BlocProvider(create: (context) => TranslationBloc()),
     ],
   );
 }
