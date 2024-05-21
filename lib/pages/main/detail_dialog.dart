@@ -2,6 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:msq_translation_editor/msq_translation_editor.dart';
+import 'package:translator_plus/translator_plus.dart';
 
 class DetailDialog extends StatefulWidget {
   final bool isEdit;
@@ -15,12 +16,43 @@ class DetailDialog extends StatefulWidget {
 
 class _DetailDialogState extends State<DetailDialog> {
 
+  final _formkey = GlobalKey<FormBuilderState>();
+
+  Future<void> _translate() async {
+    _formkey.currentState?.save();
+    String defaultLanguage = "";
+    String defaultText = "";
+    final values = _formkey.currentState?.value;
+    if((values?['en-US'] ?? '').isNotEmpty){
+      defaultText = values?['en-US'];
+      defaultLanguage = 'en';
+    }else{
+      for(final String key in (values?.keys ?? [])){
+        if(key == Strings.key) continue;
+        if((values?[key] ?? '').isNotEmpty){
+          defaultText = values?[key];
+          defaultLanguage = key;
+          break;
+        }
+      }
+    }
+
+    final translator = GoogleTranslator();
+    for(final String key in (values?.keys ?? [])){
+      if(key == Strings.key) continue;
+      if((values?[key] ?? '').isNotEmpty) continue;
+      final translate = await translator.translate(defaultText, from: defaultLanguage, to: key.split('-').first);
+      _formkey.currentState?.fields[key]?.didChange(translate.text);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
       content: SizedBox(
         width: Dimens.widthInPercent(50),
         child: FormBuilder(
+          key: _formkey,
           child: SingleChildScrollView(
             child: Column(
               mainAxisSize: MainAxisSize.min,
@@ -69,12 +101,12 @@ class _DetailDialogState extends State<DetailDialog> {
                 Row(
                   children: [
                     TextButton(
-                      onPressed: (){}, 
+                      onPressed: _translate, 
                       child: const Text(Strings.autoGenerate,).tr()
                     ),
                     const Spacer(),
                     FilledButton(
-                      onPressed: (){}, 
+                      onPressed: AppNavigator.pop, 
                       style: FilledButton.styleFrom(
                         backgroundColor: Palette.surfaceVariant,
                         foregroundColor: Palette.onSurfaceVariant

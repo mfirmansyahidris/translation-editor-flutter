@@ -45,7 +45,6 @@ class _MainScreenState extends State<MainScreen> {
                 context: context, 
                 builder: (context) => DetailDialog(
                   keyword: "",
-                  isEdit: true,
                   translation: translation,
                 )
               );
