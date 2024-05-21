@@ -39,4 +39,23 @@ class FileManager{
     }
     return lang;
   }
+
+  static Future<void> saveFiles({
+    required Map<String, Map<String, String>> languages,
+    required String path
+  }) async {
+    String separator = "/";
+    if(Platform.isWindows) separator = "\\";
+
+    languages.forEach((key, value) async { 
+      final output = File("$path$separator$key.json");
+      await output.create();
+      await output.writeAsString(_getPrettyJSONString(value));
+    });
+  }
+
+  static String _getPrettyJSONString(jsonObject){
+    var encoder = const JsonEncoder.withIndent("     ");
+    return encoder.convert(jsonObject);
+  }
 }
