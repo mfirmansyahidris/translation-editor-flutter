@@ -77,6 +77,8 @@ class MaterialDataTableState extends State<MaterialDataTable>
 
   final columns = <_MyTableColumn>[];
 
+  String? _searchCache;
+
   @override
   void initState() {
     super.initState();
@@ -110,6 +112,7 @@ class MaterialDataTableState extends State<MaterialDataTable>
   }
 
   void setKeys({String? search}){
+    _searchCache = search;
     final keys = <String>{};
     for (var language in _languages) { 
       keys.addAll(Di.translation.languages[language]?.keys.toList() ?? []);
@@ -319,7 +322,7 @@ class MaterialDataTableState extends State<MaterialDataTable>
                     _showContextMenu(context, detail.globalPosition);
                   },
                   child: InkWell(
-                    onTap: (){
+                    onTap: () async {
                       setState(() {
                         selection = row;
                       });
@@ -327,7 +330,7 @@ class MaterialDataTableState extends State<MaterialDataTable>
                       for(final lang in _languages){
                         translation[lang] = Di.translation.languages[lang]?[_keys[row]] ?? "";
                       }
-                      showDialog(
+                      final res = await showDialog(
                         context: context, 
                         builder: (context) => DetailDialog(
                           keyword: _keys[row],
@@ -335,6 +338,9 @@ class MaterialDataTableState extends State<MaterialDataTable>
                           translation: translation,
                         )
                       );
+                      if(res != null && res is bool){
+                        setKeys(search: _searchCache);
+                      }
                     },
                     child: contentBuilder(
                       context,

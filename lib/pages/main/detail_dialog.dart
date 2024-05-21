@@ -1,6 +1,8 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:msq_translation_editor/msq_translation_editor.dart';
 import 'package:translator_plus/translator_plus.dart';
 
@@ -16,10 +18,48 @@ class DetailDialog extends StatefulWidget {
 
 class _DetailDialogState extends State<DetailDialog> {
 
+  bool _isTranslating = false;
+  bool _translatingError = false;
+
   final _formkey = GlobalKey<FormBuilderState>();
+  
 
   Future<void> _translate() async {
+    setState(() {
+      _translatingError = false;
+    });
+
     _formkey.currentState?.save();
+    final defaults = _getDefaultLanguage();
+    String defaultLanguage = defaults[0];
+    String defaultText = defaults[1];
+    final values = _formkey.currentState?.value;
+
+    if(defaultText.isEmpty){
+      setState(() {
+        _translatingError = true;
+      });
+      return;  
+    }
+  
+    setState(() {
+      _isTranslating = true;
+    });
+
+    final translator = GoogleTranslator();
+    for(final String key in (values?.keys ?? [])){
+      if(key == Strings.key) continue;
+      if((values?[key] ?? '').isNotEmpty) continue;
+      final translate = await translator.translate(defaultText, from: defaultLanguage, to: key.split('-').first);
+      _formkey.currentState?.fields[key]?.didChange(translate.text);
+    }
+
+    setState(() {
+      _isTranslating = false;
+    });
+  }
+
+  List<String> _getDefaultLanguage(){
     String defaultLanguage = "";
     String defaultText = "";
     final values = _formkey.currentState?.value;
@@ -36,13 +76,34 @@ class _DetailDialogState extends State<DetailDialog> {
         }
       }
     }
+    return [defaultLanguage, defaultText];
+  }
 
-    final translator = GoogleTranslator();
-    for(final String key in (values?.keys ?? [])){
-      if(key == Strings.key) continue;
-      if((values?[key] ?? '').isNotEmpty) continue;
-      final translate = await translator.translate(defaultText, from: defaultLanguage, to: key.split('-').first);
-      _formkey.currentState?.fields[key]?.didChange(translate.text);
+  void _add(){
+    setState(() {
+      _translatingError = false;
+    });
+
+    if(_formkey.currentState?.saveAndValidate() ?? false){
+      final defaults = _getDefaultLanguage();
+      if(defaults[1].isEmpty){
+        setState(() {
+          _translatingError = true;
+        });
+        return;
+      }
+
+      final values = _formkey.currentState?.value;
+
+      final keywords = values?[Strings.key];
+      for(final String key in (values?.keys ?? [])){
+        if(key == Strings.key) continue;
+        Di.translation.languages[key]?.addAll({
+          keywords: values?[key]
+        });
+      }
+
+      AppNavigator.pop(true);
     }
   }
 
@@ -62,6 +123,9 @@ class _DetailDialogState extends State<DetailDialog> {
                   name: Strings.key,
                   readOnly: widget.isEdit,
                   initialValue: widget.keyword,
+                  validator: FormBuilderValidators.required(
+                    errorText: Strings.fieldIsRequired(Strings.key.tr())
+                  ),
                   decoration: InputDecoration(
                     border: const OutlineInputBorder(),
                     label: Text(Strings.key.tr()),
@@ -79,8 +143,8 @@ class _DetailDialogState extends State<DetailDialog> {
                     ),
                   ),
                 )).toList(),
-                SpacerV.M,
-                Container(
+                if(_translatingError) SpacerV.M,
+                if(_translatingError) Container(
                   width: double.infinity,
                   decoration: BoxDecoration(
                     color: Palette.errorContainer,
@@ -89,20 +153,42 @@ class _DetailDialogState extends State<DetailDialog> {
                   ),
                   padding: const EdgeInsets.all(Dimens.spaceXS),
                   child: Text(
-                    "Please fill at least one language to start to generate the translation",
+                    Strings.pleaseFillAtleastOneLangage,
                     style: TextStyle(
                       color: Palette.onErrorContainer
                     ),
-                  ),
+                  ).tr(),
                 ),
                 SpacerV.M,
                 const Divider(),
                 SpacerV.M,
                 Row(
                   children: [
-                    TextButton(
-                      onPressed: _translate, 
-                      child: const Text(Strings.autoGenerate,).tr()
+                    Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        Visibility(
+                          visible: _isTranslating,
+                          maintainAnimation: true,
+                          maintainState: true,
+                          maintainSize: true,
+                          child: const SizedBox(
+                            height: Dimens.iconL,
+                            width: Dimens.iconL,
+                            child: CircularProgressIndicator(),
+                          )
+                        ),
+                        Visibility(
+                          visible: !_isTranslating,
+                          maintainAnimation: true,
+                          maintainState: true,
+                          maintainSize: true,
+                          child: TextButton(
+                            onPressed: _translate, 
+                            child: const Text(Strings.autoGenerate,).tr()
+                          ),
+                        ),
+                      ],
                     ),
                     const Spacer(),
                     FilledButton(
@@ -115,8 +201,8 @@ class _DetailDialogState extends State<DetailDialog> {
                     ),
                     SpacerH.XS,
                     FilledButton(
-                      onPressed: (){}, 
-                      child: const Text(Strings.add,).tr()
+                      onPressed: _add, 
+                      child: Text(widget.isEdit ? Strings.edit : Strings.add,).tr()
                     )
                   ],
                 )

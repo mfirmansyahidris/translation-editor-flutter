@@ -21,5 +21,7 @@
     "create": "Create",
     "cannot_find_language_files": "Cannot Find The Language Files",
     "please_select_directory_of_language_files": "Please select a directory that have a language files",
-    "ok": "Ok"
+    "ok": "Ok",
+    "edit": "Edit",
+    "please_fill_atleast_one_language": "Please fill at least one language"
 }

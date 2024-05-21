@@ -25,4 +25,6 @@ class Strings {
   static const String cannotFindLanguageFile = "cannot_find_language_files";
   static const String pleaseSelectLanguageDirectory = "please_select_directory_of_language_files";
   static const String ok = "ok";
+  static const String edit = "edit";
+  static const String pleaseFillAtleastOneLangage = "please_fill_atleast_one_language";
 }

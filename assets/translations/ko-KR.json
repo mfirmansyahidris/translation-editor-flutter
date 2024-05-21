@@ -20,6 +20,8 @@
     "languages": "언어",
     "create": "만들다",
     "cannot_find_language_files": "언어 파일을 찾을 수 없습니다",
-    "please_select_directory_of_language_files": "언어 파일이 있는 디렉터리를 선택하세요",
-    "ok": "그래"
+    "please_select_di,rectory_of_language_files": "언어 파일이 있는 디렉터리를 선택하세요",
+    "ok": "그래",
+    "edit": "편집하다",
+    "please_fill_atleast_one_language": "적어도 하나의 언어를 작성하십시오"
 }

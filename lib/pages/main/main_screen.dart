@@ -12,6 +12,7 @@ class MainScreen extends StatefulWidget {
 class _MainScreenState extends State<MainScreen> {
 
   final _keySearch = GlobalKey<MaterialDataTableState>();
+  String searchKey = "";
 
   @override
   void initState() {
@@ -34,20 +35,24 @@ class _MainScreenState extends State<MainScreen> {
         children: [
           HeaderSection(
             onSearch: (value){
-              _keySearch.currentState?.setKeys(search: value);
+              searchKey = value;
+              _keySearch.currentState?.setKeys(search: searchKey);
             },
-            onAdd: (){
+            onAdd: () async {
               final Map<String, String> translation = {};
               for(final lang in Di.translation.languages.keys.toList()){
                 translation[lang] = "";
               }
-              showDialog(
+              final res = await  showDialog(
                 context: context, 
                 builder: (context) => DetailDialog(
                   keyword: "",
                   translation: translation,
                 )
               );
+              if(res != null && res is bool){
+                _keySearch.currentState?.setKeys(search: searchKey);
+              }
             },
           ),
           const Divider(),
