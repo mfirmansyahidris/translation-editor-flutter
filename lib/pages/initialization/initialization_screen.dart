@@ -28,31 +28,11 @@ class _InitializationScreenState extends State<InitializationScreen> {
   }
 
   void _open(){
-    FilePicker.platform.getDirectoryPath().then((path){
-      if(path != null){
-        final files = FileManager.openLanguageFile(path);
-        if(files.isEmpty){
-          showDialog(
-            context: context, 
-            builder: (context) => AlertDialog(
-              icon: Icon(Icons.error, color: Palette.error,),
-              title: const Text(Strings.cannotFindLanguageFile).tr(),
-              content: const Text(Strings.pleaseSelectLanguageDirectory).tr(),
-              actions: [
-                FilledButton(
-                  onPressed: AppNavigator.pop, 
-                  child: const Text(Strings.ok).tr()
-                )
-              ],
-            )
-          );
-        }else{
-          AppNavigator.goToPageReplace(AppRoutes.main, arguments: {
-            'path': path
-          });
-        }
-      }
-    });
+    showDialog(
+      context: context, 
+      barrierDismissible: false,
+      builder: (context) => OpenDialog()
+    );
   }
 
   @override

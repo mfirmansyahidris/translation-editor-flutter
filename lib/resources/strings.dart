@@ -18,7 +18,7 @@ class Strings {
   static const String autoGenerate = "auto_generate";
   static const String recent = 'recent';
   static const String new1 = 'new';
-  static const String open = 'Open';
+  static const String open = 'open';
   static const String directory = "directory";
   static const String languages = "languages";
   static const String create = "create";
@@ -27,4 +27,10 @@ class Strings {
   static const String ok = "ok";
   static const String edit = "edit";
   static const String pleaseFillAtleastOneLangage = "please_fill_atleast_one_language";
+  static const String generalSetup = "general_setup";
+  static const String language = "language";
+  static const String darkTheme = 'dark_theme';
+  static const String outputSetup = 'output_setup';
+  static const String scriptType = 'script_type';
+
 }

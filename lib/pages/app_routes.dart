@@ -12,7 +12,10 @@ class AppRoutes {
     initialization: (context) => const InitializationScreen(),
     main: (context){
       final arguments = routeSettings?.arguments as Map<String, dynamic>?;
-      return MainScreen(path: arguments?['path'],);
+      return MainScreen(
+        path: arguments?['path'],
+        type: arguments?['type'],
+      );
     }
   };
 }

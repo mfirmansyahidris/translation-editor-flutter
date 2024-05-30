@@ -1,0 +1,41 @@
+name: dart_eval
+description: A flexible Dart bytecode compiler and interpreter written in Dart, enabling dynamic execution and code push for AOT Dart apps.
+version: 0.7.9
+homepage: https://github.com/ethanblake4/dart_eval
+platforms:
+  android:
+  ios:
+  linux:
+  macos:
+  web:
+  windows:
+topics:
+  - vm
+  - compiler
+  - interpreter
+  - dart
+  - codepush
+
+environment:
+  sdk: ">=2.19.0 <4.0.0"
+
+executables:
+  dart_eval:
+
+dependencies:
+  args: ^2.4.0
+  analyzer: ^6.0.0
+  collection: ^1.17.0
+  directed_graph: '>=0.3.9 <0.5.0'
+  json_annotation: ^4.4.0
+  pubspec_parse: ^1.2.0
+  path: ^1.8.0
+  pub_semver: ^2.1.0
+  package_config: ^2.1.0
+  dart_style: ^2.3.0
+
+dev_dependencies:
+  test: ^1.21.0
+  build_runner: ^2.0.0
+  json_serializable: ^6.0.0
+  lints: '>=2.0.0 <3.1.0'

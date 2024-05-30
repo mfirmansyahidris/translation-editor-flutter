@@ -36,9 +36,12 @@ class _NewDialogState extends State<NewDialog> {
         final file = File("$path/${language.twoLetter}.json");
         await file.create();
         file.writeAsStringSync("{}");
-      });
-      AppNavigator.goToPageReplace(AppRoutes.main, arguments: {
-        'path': path
+      }).then((value){
+        final type = _formKey.currentState?.value[Strings.scriptType];
+        AppNavigator.goToPageReplace(AppRoutes.main, arguments: {
+          'path': path,
+          'type': type
+        });
       });
     }
   }
@@ -138,7 +141,26 @@ class _NewDialogState extends State<NewDialog> {
                       _formKey.currentState?.fields[Strings.languages]?.didChange(_selectedLanguages.toList());
                     },
                   )).toList(),
-                )
+                ),
+                SpacerV.M,
+                FormBuilderRadioGroup<ScriptType>(
+                  name: Strings.scriptType, 
+                  decoration: InputDecoration(
+                    border: const OutlineInputBorder(),
+                    label: const Text(Strings.scriptType).tr()
+                  ),
+                  validator: FormBuilderValidators.required(),
+                  options: [
+                    FormBuilderFieldOption(
+                      value: ScriptType.json,
+                      child: Text(ScriptType.json.name),
+                    ),
+                    FormBuilderFieldOption(
+                      value: ScriptType.dart,
+                      child: Text(ScriptType.dart.name),
+                    ),
+                  ]
+                ),
               ],
             ),
           ),

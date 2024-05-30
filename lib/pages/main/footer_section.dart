@@ -1,12 +1,11 @@
-import 'dart:convert';
-
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:msq_translation_editor/msq_translation_editor.dart';
 
 class FooterSection extends StatelessWidget {
-  const FooterSection({super.key});
+  final String path;
+  const FooterSection({super.key, required this.path});
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +23,9 @@ class FooterSection extends StatelessWidget {
               Icons.settings,
               color: Palette.onSecondary,
             ),
-            onPressed: () {},
+            onPressed: () {
+              Scaffold.of(context).openDrawer();
+            },
             label: const Text(
               Strings.setup,
             ).tr(),
@@ -38,10 +39,7 @@ class FooterSection extends StatelessWidget {
               Strings.apply,
             ).tr(),
             onPressed: () {
-              FileManager.saveFiles(
-                languages: translationBloc.languages, 
-                path: "E:"
-              );
+              FileManager.saveFiles(translationBloc.translation);
             },
             label: Icon(
               Icons.fast_forward,

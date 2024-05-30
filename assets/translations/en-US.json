@@ -23,5 +23,10 @@
     "please_select_directory_of_language_files": "Please select a directory that have a language files",
     "ok": "Ok",
     "edit": "Edit",
-    "please_fill_atleast_one_language": "Please fill at least one language"
+    "please_fill_atleast_one_language": "Please fill at least one language",
+    "general_setup": "General Setup",
+    "language": "Language",
+    "dark_theme": "Dark Theme",
+    "script_type": "Script Type",
+    "output_setup": "Output Setup"
 }

@@ -615,7 +615,7 @@ const Map<String, String> _enUS = {
   'enter_card_password': 'Enter Your Login Password',
   'enter_login_id': 'Enter Your Login ID',
   'enter_message': 'Enter message',
-  'enter_numbers_only': 'Enter Numbers Only',
+  'enter_numbers_only': 'Entetesr Numbers Only',
   'enter_pass': 'Enter Your MSQUARE MARKET Password',
   'enter_the_transmitted_txid_value': 'Enter Transmitted TXID Value',
   'enter_user_id': 'Enter user ID for your wallet.',

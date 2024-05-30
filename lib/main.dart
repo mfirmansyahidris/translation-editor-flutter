@@ -13,7 +13,7 @@ Future<void> main() async {
   runApp(
     EasyLocalization(
       supportedLocales: Locales.supportedLocales,
-      path: Locales.translations, // <-- change the path of the translation files 
+      path: Locales.translations,
       fallbackLocale: Locales.supportedLocales.first,
       child: BlocProvider(
         create: (context) => ThemeBloc(),
@@ -53,6 +53,8 @@ class _AppState extends State<App> {
     Di.localStorage.getTheme().then((brigtness){
       if(brigtness == null){
         _themeBloc.set(context, brightness: Brightness.light);
+      }else{
+        _themeBloc.set(context, brightness: brigtness);
       }
     });
   }

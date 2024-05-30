@@ -10,8 +10,7 @@ class ThemeBloc extends Cubit<ThemeData>{
     bool save = false
   }) async {
     Brightness? newBrightness;
-    TextTheme textTheme = createTextTheme(context, "Roboto", "Roboto");
-    AppThemes theme = AppThemes(textTheme);
+    AppThemes theme = const AppThemes();
     final systemBrightness = View.of(context).platformDispatcher.platformBrightness;
 
     if(brightness == null){

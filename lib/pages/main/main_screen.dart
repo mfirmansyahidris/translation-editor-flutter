@@ -4,7 +4,8 @@ import 'package:msq_translation_editor/msq_translation_editor.dart';
 
 class MainScreen extends StatefulWidget {
   final String path;
-  const MainScreen({super.key, required this.path});
+  final ScriptType type;
+  const MainScreen({super.key, required this.path, required this.type});
 
   @override
   State<MainScreen> createState() => _MainScreenState();
@@ -23,9 +24,9 @@ class _MainScreenState extends State<MainScreen> {
 
     _translationBloc = context.read();
 
-    final languageFiles = FileManager.openLanguageFile(widget.path);
+    final languageFiles = FileManager.openLanguageFile(directoryPath: widget.path, type: widget.type);
     FileManager.getLanguages(languageFiles).then((value){
-      _translationBloc.init(value);
+      _translationBloc.init(Translation(languages: value, path: widget.path, scriptType: widget.type));
     });
   }
 
@@ -35,7 +36,10 @@ class _MainScreenState extends State<MainScreen> {
       toolbarColor: Palette.primary,
       toolbarTextColor: Palette.onPrimary,
       windowTitle: Strings.appName,
-      body: BlocBuilder<TranslationBloc, Map<String, Map<String, String>>>(
+      drawer: const Drawer(
+        child: Setup(),
+      ),
+      body: BlocBuilder<TranslationBloc, Translation>(
         builder: (context, state) {
           return Column(
             children: [
@@ -46,7 +50,7 @@ class _MainScreenState extends State<MainScreen> {
                 },
                 onAdd: () async {
                   final Map<String, String> translation = {};
-                  for(final lang in state.keys.toList()){
+                  for(final lang in state.languages.keys.toList()){
                     translation[lang] = "";
                   }
                   final res = await  showDialog(
@@ -68,15 +72,17 @@ class _MainScreenState extends State<MainScreen> {
                     horizontal: Dimens.spaceDefault
                   ),
                   child: Visibility(
-                    visible: state.isNotEmpty,
+                    visible: state.languages.isNotEmpty,
                     child: MaterialDataTable(
                       key: _keySearch,
-                      languages: state,
+                      languages: state.languages,
                     ),
                   )
                 ),
               ),
-              const FooterSection()
+              FooterSection(
+                path: widget.path,
+              )
             ],
           );
         }
