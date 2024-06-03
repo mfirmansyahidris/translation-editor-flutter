@@ -770,6 +770,13 @@
         "lcid": 4096
     },
     {
+        "country": "China mainland alt",
+        "language": "Chinese",
+        "two_letter": "zh-CH",
+        "three_letter": "zh-CHN",
+        "lcid": 40961
+    },
+    {
         "country": "China mainland",
         "language": "English",
         "two_letter": "en-CN",

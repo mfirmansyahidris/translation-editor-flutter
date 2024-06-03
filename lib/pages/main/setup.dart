@@ -136,9 +136,6 @@ class _SetupState extends State<Setup> {
                         final dir = await FilePicker.platform.getDirectoryPath();
                         if(dir != null){
                           _translationBloc.setPath(dir);
-                          setState(() {
-                            
-                          });
                         }
                       },
                       controller: _directoryController,

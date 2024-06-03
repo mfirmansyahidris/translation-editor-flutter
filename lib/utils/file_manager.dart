@@ -106,9 +106,15 @@ class FileManager{
     if(Platform.isWindows) separator = "\\";
 
     translation.languages.forEach((key, value) async { 
-      final output = File("${translation.path}$separator$key.json");
+      final output = File("${translation.path}$separator$key.${translation.scriptType?.name}");
       await output.create();
-      await output.writeAsString(_getPrettyJSONString(value));
+      if(translation.scriptType == ScriptType.json){
+        await output.writeAsString(_getPrettyJSONString(value));
+      }else if(translation.scriptType == ScriptType.dart){
+        String content = await output.readAsString();
+        content = content.replaceAll(RegExp(r'\{[^}]*\}'), _getPrettyJSONString(value));
+        await output.writeAsString(content);
+      }
     });
   }
 
