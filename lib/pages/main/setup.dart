@@ -87,41 +87,41 @@ class _SetupState extends State<Setup> {
         ListTile(
           leading: const Text(Strings.outputSetup).tr(),
         ),
-        BlocBuilder<TranslationBloc, Translation>(
-          builder: (context, state) {
-            return ListTile(
-              title: Row(
-                children: [
-                  Expanded(child: const Text(Strings.scriptType).tr()),
-                  Expanded(
-                    child: DropdownButtonFormField<ScriptType>(
-                      items: [
-                        DropdownMenuItem(
-                          value: ScriptType.json, 
-                          child: Text(ScriptType.json.name)
-                        ),
-                        DropdownMenuItem(
-                          value: ScriptType.dart, 
-                          child: Text(ScriptType.dart.name)
-                        ),
-                      ],
-                      value: state.scriptType,
-                      decoration: const InputDecoration(
-                        border: OutlineInputBorder(), 
-                        isDense: true
-                      ),
-                      onChanged: (value) {
-                        if (value != null) {
-                          _translationBloc.setScriptType(value);
-                        }
-                      },
-                    ),
-                  )
-                ],
-              ),
-            );
-          }
-        ),
+        // BlocBuilder<TranslationBloc, Translation>(
+        //   builder: (context, state) {
+        //     return ListTile(
+        //       title: Row(
+        //         children: [
+        //           Expanded(child: const Text(Strings.scriptType).tr()),
+        //           Expanded(
+        //             child: DropdownButtonFormField<ScriptType>(
+        //               items: [
+        //                 DropdownMenuItem(
+        //                   value: ScriptType.json, 
+        //                   child: Text(ScriptType.json.name)
+        //                 ),
+        //                 DropdownMenuItem(
+        //                   value: ScriptType.dart, 
+        //                   child: Text(ScriptType.dart.name)
+        //                 ),
+        //               ],
+        //               value: state.scriptType,
+        //               decoration: const InputDecoration(
+        //                 border: OutlineInputBorder(), 
+        //                 isDense: true
+        //               ),
+        //               onChanged: (value) {
+        //                 if (value != null) {
+        //                   _translationBloc.setScriptType(value);
+        //                 }
+        //               },
+        //             ),
+        //           )
+        //         ],
+        //       ),
+        //     );
+        //   }
+        // ),
         BlocBuilder<TranslationBloc, Translation>(
           builder: (context, state) {
             _directoryController.text = state.path;
@@ -150,6 +150,19 @@ class _SetupState extends State<Setup> {
             );
           }
         ),
+        SpacerV.M,
+        ListTile(
+          title: OutlinedButton.icon(
+            onPressed: (){
+              showDialog(
+                context: context, 
+                builder: (context) => const LanguageDialog()
+              );
+            },
+            icon: const Icon(Icons.add), 
+            label: const Text(Strings.addLanguage).tr()
+          ),
+        )
       ],
     );
   }

@@ -30,4 +30,14 @@ class TranslationBloc extends Cubit<Translation>{
     emit(_translation);
   }
 
+  void syncLanguageSet(Set<String> updateSet){
+    _translation.languages.removeWhere((key, value) => !updateSet.contains(key));
+    for (String key in updateSet) {
+      if (!_translation.languages.containsKey(key)) {
+        _translation.languages[key] = {};
+      }
+    }
+    emit(_translation.copyWith());
+  }
+
 }

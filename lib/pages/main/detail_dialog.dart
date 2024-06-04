@@ -105,7 +105,7 @@ class _DetailDialogState extends State<DetailDialog> {
         result[key] = { keywords: values?[key] };
       }
 
-      // _translationBloc.addLanguages(result);
+      _translationBloc.addAll(result);
 
       AppNavigator.pop(true);
     }

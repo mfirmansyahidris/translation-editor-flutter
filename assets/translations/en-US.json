@@ -28,5 +28,8 @@
     "language": "Language",
     "dark_theme": "Dark Theme",
     "script_type": "Script Type",
-    "output_setup": "Output Setup"
+    "output_setup": "Output Setup",
+    "add_language": "Add Language",
+    "this_action_cannot_undone": "This action cannot be undone",
+    "this_action_cannot_undone_description": "Are you sure want to remove the language set?"
 }

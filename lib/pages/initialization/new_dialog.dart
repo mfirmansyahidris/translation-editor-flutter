@@ -142,25 +142,25 @@ class _NewDialogState extends State<NewDialog> {
                     },
                   )).toList(),
                 ),
-                SpacerV.M,
-                FormBuilderRadioGroup<ScriptType>(
-                  name: Strings.scriptType, 
-                  decoration: InputDecoration(
-                    border: const OutlineInputBorder(),
-                    label: const Text(Strings.scriptType).tr()
-                  ),
-                  validator: FormBuilderValidators.required(),
-                  options: [
-                    FormBuilderFieldOption(
-                      value: ScriptType.json,
-                      child: Text(ScriptType.json.name),
-                    ),
-                    FormBuilderFieldOption(
-                      value: ScriptType.dart,
-                      child: Text(ScriptType.dart.name),
-                    ),
-                  ]
-                ),
+                // SpacerV.M,
+                // FormBuilderRadioGroup<ScriptType>(
+                //   name: Strings.scriptType, 
+                //   decoration: InputDecoration(
+                //     border: const OutlineInputBorder(),
+                //     label: const Text(Strings.scriptType).tr()
+                //   ),
+                //   validator: FormBuilderValidators.required(),
+                //   options: [
+                //     FormBuilderFieldOption(
+                //       value: ScriptType.json,
+                //       child: Text(ScriptType.json.name),
+                //     ),
+                //     FormBuilderFieldOption(
+                //       value: ScriptType.dart,
+                //       child: Text(ScriptType.dart.name),
+                //     ),
+                //   ]
+                // ),
               ],
             ),
           ),

@@ -28,5 +28,8 @@
     "language": "언어",
     "dark_theme": "어두운 테마",
     "script_type": "스크립트 유형",
-    "output_setup": "출력 설정"
+    "output_setup": "출력 설정",
+    "add_language": "언어를 추가하십시오",
+    "this_action_cannot_undone": "이 조치는 취소 할 수 없습니다",
+    "this_action_cannot_undone_description": "언어 세트를 제거 하시겠습니까?"
 }

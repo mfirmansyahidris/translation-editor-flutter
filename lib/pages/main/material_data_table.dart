@@ -83,6 +83,12 @@ class MaterialDataTableState extends State<MaterialDataTable>
   @override
   void initState() {
     super.initState();
+    setHeader();
+    setKeys();
+  }
+
+  void setHeader(){
+    columns.clear();
 
     columns.addAll([
       _MyTableColumn(
@@ -109,7 +115,6 @@ class MaterialDataTableState extends State<MaterialDataTable>
           minResizeWidth: 64.0,
         ),
     ]);
-    setKeys();
   }
 
   void setKeys({String? search}){
@@ -133,6 +138,9 @@ class MaterialDataTableState extends State<MaterialDataTable>
 
   @override
   Widget build(BuildContext context) {
+    if((columns.length + 2) != _languages.length){
+      setHeader();
+    }
     const shimmerBaseColor = Color(0x20808080);
     const shimmerHighlightColor = Color(0x40FFFFFF);
 
@@ -347,12 +355,12 @@ class MaterialDataTableState extends State<MaterialDataTable>
                       context,
                       (context, column){
                         String text = "";
-                        if(column == 0){
-                          text = (row + 1).toString();
-                        }else if(column == 1){
+                        if(columns[column].label == '#'){
+                          text = text = (row + 1).toString();
+                        }else if(columns[column].label == 'key'){
                           text = _keys[row];
                         }else{
-                          text = widget.languages[_languages[column - 2]]?[_keys[row]] ?? "";
+                          text = widget.languages[columns[column].label]?[_keys[row]] ?? "";
                         }
                         return Padding(
                           padding: const EdgeInsets.only(left: 8.0),

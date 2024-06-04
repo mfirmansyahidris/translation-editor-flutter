@@ -1,5 +1,6 @@
 export 'detail_dialog.dart';
 export 'header_section.dart';
+export 'language_dialog.dart';
 export 'footer_section.dart';
 export 'main_screen.dart';
 export 'material_data_table.dart';

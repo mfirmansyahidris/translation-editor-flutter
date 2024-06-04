@@ -32,5 +32,8 @@ class Strings {
   static const String darkTheme = 'dark_theme';
   static const String outputSetup = 'output_setup';
   static const String scriptType = 'script_type';
+  static const String addLanguage = 'add_language';
+  static const String thisActionCannotUndone = "this_action_cannot_undone";
+  static const String thisActionCannotUndoneDesc = "this_action_cannot_undone_description";
 
 }
