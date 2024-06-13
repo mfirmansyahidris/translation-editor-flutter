@@ -51,10 +51,14 @@ class _DetailDialogState extends State<DetailDialog> {
 
     final translator = GoogleTranslator();
     for(final String key in (values?.keys ?? [])){
-      if(key == Strings.key) continue;
-      if((values?[key] ?? '').isNotEmpty) continue;
-      final translate = await translator.translate(defaultText, from: defaultLanguage, to: key.split('-').first);
-      _formkey.currentState?.fields[key]?.didChange(translate.text);
+      try{
+        if(key == Strings.key) continue;
+        if((values?[key] ?? '').isNotEmpty) continue;
+        final translate = await translator.translate(defaultText, from: defaultLanguage.split(RegExp('[-_]')).first, to: key.split(RegExp('[-_]')).first);
+        _formkey.currentState?.fields[key]?.didChange(translate.text);
+      }catch(e){
+        debugPrint(e.toString());
+      }
     }
 
     setState(() {
