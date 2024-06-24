@@ -26,7 +26,12 @@ class _MainScreenState extends State<MainScreen> {
 
     final languageFiles = FileManager.openLanguageFile(directoryPath: widget.path, type: widget.type);
     FileManager.getLanguages(languageFiles).then((value){
-      _translationBloc.init(Translation(languages: value, path: widget.path, scriptType: widget.type));
+      _translationBloc.init(Translation(
+          languages: value.languages, 
+          path: widget.path, 
+          scriptType: widget.type,
+          filesName: value.filesName
+        ));
     });
   }
 

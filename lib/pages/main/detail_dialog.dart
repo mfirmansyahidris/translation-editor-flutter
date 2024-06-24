@@ -54,7 +54,7 @@ class _DetailDialogState extends State<DetailDialog> {
       try{
         if(key == Strings.key) continue;
         if((values?[key] ?? '').isNotEmpty) continue;
-        final translate = await translator.translate(defaultText, from: defaultLanguage.split(RegExp('[-_]')).first, to: key.split(RegExp('[-_]')).first);
+        final translate = await translator.translate(defaultText, from: defaultLanguage.split('-').first, to: key.split('-').first);
         _formkey.currentState?.fields[key]?.didChange(translate.text);
       }catch(e){
         debugPrint(e.toString());
@@ -126,103 +126,109 @@ class _DetailDialogState extends State<DetailDialog> {
     return AlertDialog(
       content: SizedBox(
         width: Dimens.widthInPercent(50),
-        child: FormBuilder(
-          key: _formkey,
-          child: SingleChildScrollView(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                SpacerV.M,
-                FormBuilderTextField(
-                  name: Strings.key,
-                  readOnly: widget.isEdit,
-                  initialValue: widget.keyword,
-                  validator: FormBuilderValidators.required(
-                    errorText: Strings.fieldIsRequired(Strings.key.tr())
-                  ),
-                  decoration: InputDecoration(
-                    border: const OutlineInputBorder(),
-                    label: Text(Strings.key.tr()),
-                  ),
-                ),
-                if((widget.translation ?? {}).isNotEmpty)... widget.translation!.keys.map((e) => Padding(
-                  padding: const EdgeInsets.only(top: Dimens.spaceDefault),
-                  child: FormBuilderTextField(
-                    name: e,
-                    initialValue: widget.translation![e],
-                    maxLines: 3,
-                    decoration: InputDecoration(
-                      border: const OutlineInputBorder(),
-                      label: Text(e),
-                    ),
-                  ),
-                )).toList(),
-                if(_translatingError) SpacerV.M,
-                if(_translatingError) Container(
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                    color: Palette.errorContainer,
-                    border: Border.all(color: Palette.error),
-                    borderRadius: BorderRadius.circular(Dimens.borderRadiusS)
-                  ),
-                  padding: const EdgeInsets.all(Dimens.spaceXS),
-                  child: Text(
-                    Strings.pleaseFillAtleastOneLangage,
-                    style: TextStyle(
-                      color: Palette.onErrorContainer
-                    ),
-                  ).tr(),
-                ),
-                SpacerV.M,
-                const Divider(),
-                SpacerV.M,
-                Row(
-                  children: [
-                    Stack(
-                      alignment: Alignment.center,
-                      children: [
-                        Visibility(
-                          visible: _isTranslating,
-                          maintainAnimation: true,
-                          maintainState: true,
-                          maintainSize: true,
-                          child: const SizedBox(
-                            height: Dimens.iconL,
-                            width: Dimens.iconL,
-                            child: CircularProgressIndicator(),
-                          )
+        child: Column(
+          children: [
+            Expanded(
+              child: FormBuilder(
+                key: _formkey,
+                child: SingleChildScrollView(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      SpacerV.M,
+                      FormBuilderTextField(
+                        name: Strings.key,
+                        readOnly: widget.isEdit,
+                        initialValue: widget.keyword,
+                        validator: FormBuilderValidators.required(
+                          errorText: Strings.fieldIsRequired(Strings.key.tr())
                         ),
-                        Visibility(
-                          visible: !_isTranslating,
-                          maintainAnimation: true,
-                          maintainState: true,
-                          maintainSize: true,
-                          child: TextButton(
-                            onPressed: _translate, 
-                            child: const Text(Strings.autoGenerate,).tr()
+                        decoration: InputDecoration(
+                          border: const OutlineInputBorder(),
+                          label: Text(Strings.key.tr()),
+                        ),
+                      ),
+                      if((widget.translation ?? {}).isNotEmpty)... widget.translation!.keys.map((e) => Padding(
+                        padding: const EdgeInsets.only(top: Dimens.spaceDefault),
+                        child: FormBuilderTextField(
+                          name: e,
+                          initialValue: widget.translation![e],
+                          maxLines: 3,
+                          decoration: InputDecoration(
+                            border: const OutlineInputBorder(),
+                            label: Text(e),
                           ),
                         ),
-                      ],
-                    ),
-                    const Spacer(),
-                    FilledButton(
-                      onPressed: AppNavigator.pop, 
-                      style: FilledButton.styleFrom(
-                        backgroundColor: Palette.surfaceVariant,
-                        foregroundColor: Palette.onSurfaceVariant
+                      )).toList(),
+                      if(_translatingError) SpacerV.M,
+                      if(_translatingError) Container(
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                          color: Palette.errorContainer,
+                          border: Border.all(color: Palette.error),
+                          borderRadius: BorderRadius.circular(Dimens.borderRadiusS)
+                        ),
+                        padding: const EdgeInsets.all(Dimens.spaceXS),
+                        child: Text(
+                          Strings.pleaseFillAtleastOneLangage,
+                          style: TextStyle(
+                            color: Palette.onErrorContainer
+                          ),
+                        ).tr(),
                       ),
-                      child: const Text(Strings.close,).tr()
+                      SpacerV.M,
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            const Divider(),
+            SpacerV.M,
+            Row(
+              children: [
+                Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    Visibility(
+                      visible: _isTranslating,
+                      maintainAnimation: true,
+                      maintainState: true,
+                      maintainSize: true,
+                      child: const SizedBox(
+                        height: Dimens.iconL,
+                        width: Dimens.iconL,
+                        child: CircularProgressIndicator(),
+                      )
                     ),
-                    SpacerH.XS,
-                    FilledButton(
-                      onPressed: _add, 
-                      child: Text(widget.isEdit ? Strings.edit : Strings.add,).tr()
-                    )
+                    Visibility(
+                      visible: !_isTranslating,
+                      maintainAnimation: true,
+                      maintainState: true,
+                      maintainSize: true,
+                      child: TextButton(
+                        onPressed: _translate, 
+                        child: const Text(Strings.autoGenerate,).tr()
+                      ),
+                    ),
                   ],
+                ),
+                const Spacer(),
+                FilledButton(
+                  onPressed: AppNavigator.pop, 
+                  style: FilledButton.styleFrom(
+                    backgroundColor: Palette.surfaceVariant,
+                    foregroundColor: Palette.onSurfaceVariant
+                  ),
+                  child: const Text(Strings.close,).tr()
+                ),
+                SpacerH.XS,
+                FilledButton(
+                  onPressed: _add, 
+                  child: Text(widget.isEdit ? Strings.edit : Strings.add,).tr()
                 )
               ],
-            ),
-          ),
+            )
+          ],
         ),
       ),
     );

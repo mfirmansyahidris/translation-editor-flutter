@@ -15,6 +15,7 @@ class _LanguageDialogState extends State<LanguageDialog> {
   final _formKey = GlobalKey<FormBuilderState>();
 
   final Set<Language> _currentLanguage = {};
+  final Set<Language> _initialLanguage = {};
 
   late TranslationBloc _translationBloc;
 
@@ -27,6 +28,7 @@ class _LanguageDialogState extends State<LanguageDialog> {
       try{
         final language = Di.languages.firstWhere((e) => e.twoLetter == key);
         _currentLanguage.add(language);
+        _initialLanguage.add(language);
       }catch(e){
         debugPrint(e.toString());
       }
@@ -38,8 +40,8 @@ class _LanguageDialogState extends State<LanguageDialog> {
     AppNavigator.pop();
   }
 
-  void _removeConfirmation(Language e){
-    showDialog(
+  Future<bool> _removeConfirmation() async {
+    final dialogResult = await showDialog(
       context: context, 
       builder: (context) => AlertDialog(
         title: const Text(
@@ -59,17 +61,18 @@ class _LanguageDialogState extends State<LanguageDialog> {
           ),
           FilledButton(
             onPressed: (){
-              setState(() {
-                _currentLanguage.remove(e);
-              });
-              _formKey.currentState?.fields[Strings.languages]?.didChange(_currentLanguage.toList());
-              AppNavigator.pop();
+              AppNavigator.pop(true);
             }, 
             child: const Text(Strings.delete,).tr()
           )
         ],
       )
     );
+
+    if(dialogResult != null){
+      return dialogResult;
+    }
+    return false;
   }
 
   @override
@@ -104,6 +107,9 @@ class _LanguageDialogState extends State<LanguageDialog> {
                       }
                       return null;
                     },
+                    onChanged: (value){
+                      _validateTheUncheckedValue(value);
+                    },
                     initialValue: _currentLanguage.toList(),
                     orientation: OptionsOrientation.vertical,
                     options: List.generate(Di.languages.length, (index){
@@ -137,7 +143,10 @@ class _LanguageDialogState extends State<LanguageDialog> {
                   children: [
                     ... _currentLanguage.map((e) => TextButton(
                       onPressed: (){
-                        _removeConfirmation(e);
+                        setState(() {
+                          _currentLanguage.remove(e);
+                        });
+                        _formKey.currentState?.fields[Strings.languages]?.didChange(_currentLanguage.toList());
                       },
                       child: Text(
                         "${e.language}(${e.twoLetter})",
@@ -169,5 +178,18 @@ class _LanguageDialogState extends State<LanguageDialog> {
         )
       ],
     );
+  }
+
+  Future<void> _validateTheUncheckedValue(List<Language>? currentValues) async {
+    if (currentValues == null) return;
+    
+    for (final value in _initialLanguage) {
+      if (!currentValues.contains(value)) {
+        final result = await _removeConfirmation();
+        if(!result){
+          _formKey.currentState?.fields[Strings.languages]?.didChange([... currentValues, value]);
+        }
+      }
+    }
   }
 }
